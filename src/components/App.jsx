@@ -11,6 +11,7 @@ function App() {
   // FALSE, it lives in ListingForm because it'll be POSTed anyways- other components will make a GET request if they need the data
 
   const [listings, setListings] = useState([])
+  const [search, setSearch] = useState("")
 
   useEffect(() => {
     fetch("http://localhost:6001/listings")
@@ -41,11 +42,16 @@ function App() {
     setListings(prevListing => prevListing.filter(listing => listing.id !== deletedListing))
   }
 
+  const displayedListings = listings.filter((listing) =>
+    listing.description.toLowerCase().includes(search.toLowerCase())
+  );
+
+
   return (
     <div className="app">
-      <Header />
+      <Header onSearch={setSearch} search={search} />
       <ListingForm addListing={addListing} />
-      <ListingsContainer listings={listings} updateListing={updateListing} deleteListing={deleteListing} />
+      <ListingsContainer listings={displayedListings} updateListing={updateListing} deleteListing={deleteListing} />
     </div>
   );
 }
