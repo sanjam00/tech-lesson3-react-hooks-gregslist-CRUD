@@ -8,9 +8,11 @@ function App() {
   // there will be a serach function, so const [searchTerm, setSearchTerm] = useState(""). this use this in a in a search function (w the toLowerCase stuff)
   //update state of the search bar with this.
 
-  //does the newItem live in ListingForm or here? I think here, because other components need access to it
+  //does the newItem live in ListingForm or here? I think here, because other components need access to it. 
+  // FALSE, it lives in ListingForm because it'll be POSTed anyways- other components will make a GET request if they need the data
 
   const [listings, setListings] = useState([])
+
 
   useEffect(() => {
     fetch("http://localhost:6001/listings")
@@ -27,10 +29,14 @@ function App() {
       .catch(error => console.log("Error fetching data", error))
   }, [])
 
+  function addListing(newListing) {
+    setListings(prevListings => [...prevListings, newListing])
+  }
+
   return (
     <div className="app">
       <Header />
-      <ListingForm />
+      <ListingForm addListing={addListing} />
       <ListingsContainer listings={listings} />
     </div>
   );

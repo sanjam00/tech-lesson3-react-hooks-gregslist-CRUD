@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const ListingForm = () => {
+const ListingForm = ({ addListing, props }) => {
 	const [formData, setFormData] = useState({
 		description: "",
 		image: "",
@@ -27,7 +27,16 @@ const ListingForm = () => {
 				}
 				return response.json()
 			})
-			.then(data => console.log(data))
+			.then(newListing => {
+				// use prop to add new listing to state
+				addListing(newListing)
+				//  and clear state
+				setFormData({
+					description: "",
+					image: "",
+					location: "",
+				})
+			})
 			.catch(error => console.log("Error creating data", error))
 	}
 
