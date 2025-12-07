@@ -33,11 +33,17 @@ function App() {
     setListings(prevListings => [...prevListings, newListing])
   }
 
+  function updateListing(updatedListing) {
+    setListings(prevListing =>
+      prevListing.map(listing => listing.id === updatedListing ? updatedListing : listing)
+    )
+  }
+
   return (
     <div className="app">
       <Header />
       <ListingForm addListing={addListing} />
-      <ListingsContainer listings={listings} />
+      <ListingsContainer listings={listings} updateListing={updateListing} />
     </div>
   );
 }
