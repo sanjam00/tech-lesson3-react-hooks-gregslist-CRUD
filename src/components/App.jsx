@@ -6,13 +6,11 @@ import ListingsContainer from "./ListingsContainer";
 function App() {
   //fetch and render list data here, pass down to ListCard thru ListContainer
   // there will be a serach function, so const [searchTerm, setSearchTerm] = useState(""). this use this in a in a search function (w the toLowerCase stuff)
-  //update state of the search bar with this.
 
   //does the newItem live in ListingForm or here? I think here, because other components need access to it. 
   // FALSE, it lives in ListingForm because it'll be POSTed anyways- other components will make a GET request if they need the data
 
   const [listings, setListings] = useState([])
-
 
   useEffect(() => {
     fetch("http://localhost:6001/listings")
@@ -39,11 +37,15 @@ function App() {
     )
   }
 
+  function deleteListing(deletedListing) {
+    setListings(prevListing => prevListing.filter(listing => listing.id !== deletedListing))
+  }
+
   return (
     <div className="app">
       <Header />
       <ListingForm addListing={addListing} />
-      <ListingsContainer listings={listings} updateListing={updateListing} />
+      <ListingsContainer listings={listings} updateListing={updateListing} deleteListing={deleteListing} />
     </div>
   );
 }

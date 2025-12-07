@@ -1,4 +1,4 @@
-function ListingCard({ id, description, image, location, favorite, updateListing, props }) {
+function ListingCard({ id, description, image, location, favorite, updateListing, deleteListing, props }) {
   function handleFavorite() {
     fetch(`http://localhost:6001/listings/${id}`, {
       method: "PATCH",
@@ -16,6 +16,17 @@ function ListingCard({ id, description, image, location, favorite, updateListing
       .catch(error => console.log(error.message))
   }
 
+  function handleDelete() {
+    fetch(`http://localhost:6001/listings/${id}`, {
+      method: "DELETE"
+    })
+      .then(r => {
+        if (!r.ok) { throw new Error("Failed to delete listing") }
+        deleteListing(id)
+      })
+      .catch(error => console.log("Request failed:", error))
+  }
+
   return (
     <li className="card">
       <div className="image">
@@ -30,7 +41,7 @@ function ListingCard({ id, description, image, location, favorite, updateListing
         )}
         <strong>{description}</strong>
         <span> · {location}</span>
-        <button className="emoji-button delete">🗑</button>
+        <button className="emoji-button delete" onClick={handleDelete}>🗑</button>
       </div>
     </li>
   );
