@@ -1,18 +1,57 @@
+import { useState } from "react";
+
 const ListingForm = () => {
-    return (
-        <div className="form-container">
-            <p>Create a New Listing</p>
-            <form>
-                <label htmlFor="new-desc">Description:</label>
-                <input id="new-desc" type="text" name="description" placeholder="description" />
-                <label htmlFor="new-img">Image URL:</label>
-                <input id="new-img" type="text" name="image" placeholder="image" />
-                <label htmlFor="new-loc">Location:</label>
-                <input id="new-loc" type="text" name="location" placeholder="location" />
-                <input type="submit" value=" Create Listing "/>
-            </form>
-        </div>
-    );
+	const [formData, setFormData] = useState({
+		description: "",
+		image: "",
+		location: "",
+	})
+
+	const handleSubmit = event => {
+		event.preventDefault();
+
+		//create a new listing object to send to backend with favorite set to false
+		const newListing = {
+			...formData,
+			favorite: false
+		}
+
+		fetch("http://localhost:6001/listings", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(newListing)
+		})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error("failed to create listing")
+				}
+				return response.json()
+			})
+			.then(data => console.log(data))
+			.catch(error => console.log("Error creating data", error))
+	}
+
+	const handleChange = event => {
+		setFormData(previousData => ({
+			...previousData,
+			[event.target.name]: event.target.value
+		}))
+	}
+
+	return (
+		<div className="form-container">
+			<p>Create a New Listing</p>
+			<form onSubmit={handleSubmit}>
+				<label htmlFor="new-desc">Description:</label>
+				<input id="new-desc" type="text" name="description" placeholder="description" value={formData.description} onChange={handleChange} />
+				<label htmlFor="new-img">Image URL:</label>
+				<input id="new-img" type="text" name="image" placeholder="image" value={formData.image} onChange={handleChange} />
+				<label htmlFor="new-loc">Location:</label>
+				<input id="new-loc" type="text" name="location" placeholder="location" value={formData.location} onChange={handleChange} />
+				<input type="submit" value=" Create Listing " />
+			</form>
+		</div>
+	);
 }
 
 export default ListingForm;
